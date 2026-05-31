@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Environment variables — NEVER commit these
-.env
+# Environment variables — add your own key, never commit real keys
+# .env
 
 # Logs
 *.log
