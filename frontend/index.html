@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FutureMe — AI-powered personal reflection. Get a message from your future self using Gemini AI. Discover who you're becoming, what to change, and what to do next." />
+  <title>FutureMe — A Message from Your Future Self</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
+  <!-- Toast container -->
+  <div id="toast-container" role="alert" aria-live="polite"></div>
+
+  <div class="container">
+
+    <!-- ─── HEADER ─────────────────────────────────────────────── -->
+    <header>
+      <div class="logo-badge">
+        <span class="dot"></span>
+        AI-Powered · Gemini
+      </div>
+      <h1 class="hero-title">
+        Meet Your<br />
+        <span class="gradient">Future Self</span>
+      </h1>
+      <p class="hero-subtitle">
+        Share your story. Receive a message from the version of you that already made it.
+      </p>
+    </header>
+
+    <!-- ─── FORM CARD ──────────────────────────────────────────── -->
+    <section class="glass-card" id="form-card" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="sr-only">FutureMe Form</h2>
+
+      <!-- Personal Info -->
+      <div class="form-section">
+        <div class="section-label">
+          <span>👤</span> Who Are You Today
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="input-name">Your Name</label>
+            <input
+              type="text"
+              id="input-name"
+              name="name"
+              placeholder="e.g. Nitish"
+              autocomplete="given-name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="input-age">Your Age</label>
+            <input
+              type="number"
+              id="input-age"
+              name="age"
+              placeholder="e.g. 23"
+              min="13"
+              max="100"
+            />
+          </div>
+          <div class="form-group full-width">
+            <label for="input-goal">Your Biggest Dream / Goal</label>
+            <textarea
+              id="input-goal"
+              name="goal"
+              placeholder="e.g. Build a successful AI startup that helps millions of people"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Honest Truth -->
+      <div class="form-section">
+        <div class="section-label">
+          <span>🔥</span> The Honest Truth
+        </div>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="input-struggle">What Are You Struggling With Right Now?</label>
+            <textarea
+              id="input-struggle"
+              name="struggle"
+              placeholder="e.g. Lack of consistency, I start things but don't finish them, procrastination..."
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="input-vision">Where Do You See Yourself in One Year?</label>
+            <textarea
+              id="input-vision"
+              name="vision"
+              placeholder="e.g. Running a profitable AI company with my first 100 paying customers..."
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tone Selector -->
+      <div class="form-section">
+        <div class="section-label">
+          <span>🎭</span> Choose Your FutureMe Tone
+        </div>
+        <div class="tone-grid" role="radiogroup" aria-label="FutureMe tone">
+          <button
+            type="button"
+            class="tone-btn active"
+            data-tone="Motivational"
+            id="tone-motivational"
+            aria-pressed="true"
+          >
+            <span class="tone-icon">🚀</span>
+            <span class="tone-name">Motivational</span>
+            <span class="tone-desc">Warm, inspiring, full of belief</span>
+          </button>
+          <button
+            type="button"
+            class="tone-btn"
+            data-tone="Brutally Honest"
+            id="tone-brutal"
+            aria-pressed="false"
+          >
+            <span class="tone-icon">⚡</span>
+            <span class="tone-name">Brutally Honest</span>
+            <span class="tone-desc">Direct, sharp, no excuses</span>
+          </button>
+          <button
+            type="button"
+            class="tone-btn"
+            data-tone="Calm Mentor"
+            id="tone-calm"
+            aria-pressed="false"
+          >
+            <span class="tone-icon">🧘</span>
+            <span class="tone-name">Calm Mentor</span>
+            <span class="tone-desc">Peaceful, wise, grounded</span>
+          </button>
+          <button
+            type="button"
+            class="tone-btn"
+            data-tone="CEO Mode"
+            id="tone-ceo"
+            aria-pressed="false"
+          >
+            <span class="tone-icon">💼</span>
+            <span class="tone-name">CEO Mode</span>
+            <span class="tone-desc">Strategic, focused, execution-driven</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Generate Button -->
+      <button
+        type="button"
+        class="btn-primary"
+        id="btn-generate"
+        aria-label="Generate my FutureMe message"
+      >
+        <span id="btn-generate-icon">✨</span>
+        <span id="btn-generate-text">Generate My FutureMe</span>
+      </button>
+    </section>
+
+    <!-- ─── LOADING STATE ──────────────────────────────────────── -->
+    <div id="loading-state" role="status" aria-live="polite">
+      <div class="loader-ring" aria-hidden="true"></div>
+      <p class="loading-text">Creating your future identity…</p>
+      <p class="loading-sub">Gemini is reading between the lines of your story</p>
+    </div>
+
+    <!-- ─── RESULT SECTION ────────────────────────────────────── -->
+    <section id="result-section" aria-labelledby="result-heading" aria-live="polite">
+      <div class="glass-card">
+        <!-- Header -->
+        <div class="result-header">
+          <div class="result-header-left">
+            <div class="result-label">📨 Message From Your Future Self</div>
+            <div class="result-name" id="result-user-name"></div>
+          </div>
+          <div class="result-actions">
+            <button type="button" class="btn-secondary" id="btn-copy" aria-label="Copy result">
+              📋 Copy
+            </button>
+            <button type="button" class="btn-secondary" id="btn-regenerate" aria-label="Regenerate result">
+              🔄 Regenerate
+            </button>
+          </div>
+        </div>
+
+        <!-- Future Identity Banner -->
+        <div class="identity-banner">
+          <div class="identity-label">🌟 Your Future Identity</div>
+          <div class="identity-text" id="result-identity">—</div>
+        </div>
+
+        <!-- Main Message -->
+        <div class="message-card">
+          <p class="message-text" id="result-message">—</p>
+        </div>
+
+        <!-- Next Moves -->
+        <div id="result-moves-heading" class="section-label" style="margin-bottom:16px;">
+          <span>🎯</span> Your Next 3 Moves
+        </div>
+        <div class="moves-list" id="result-moves"></div>
+
+        <div class="divider"></div>
+
+        <!-- Info Grid: Habit + Warning -->
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-label">🌱 Daily Habit to Start Today</div>
+            <div class="info-item-value" id="result-habit">—</div>
+          </div>
+          <div class="warning-card" style="margin:0; align-items:flex-start;">
+            <span class="warning-icon">⚠️</span>
+            <div class="warning-content">
+              <div class="warning-label">FutureMe Warning</div>
+              <div class="warning-text" id="result-warning">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider" style="margin:16px 0;"></div>
+
+        <!-- Daily Mantra -->
+        <div class="mantra-card">
+          <div class="mantra-label">✨ Your Daily Mantra</div>
+          <div class="mantra-text" id="result-mantra">—</div>
+        </div>
+
+        <!-- Open Chat Button -->
+        <button type="button" class="btn-ghost" id="btn-open-chat" style="width:100%; justify-content:center; padding: 14px;" aria-label="Start chatting with FutureMe">
+          💬 Start Chat with FutureMe
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── CHAT SECTION ──────────────────────────────────────── -->
+    <section id="chat-section" aria-labelledby="chat-heading">
+      <div class="glass-card">
+        <div class="section-label">
+          <span>💬</span> Chat with FutureMe
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">
+          Ask anything — your future self is listening.
+        </p>
+
+        <!-- Messages window -->
+        <div class="chat-messages" id="chat-messages" role="log" aria-label="Chat messages" aria-live="polite">
+          <div class="chat-welcome" id="chat-welcome">
+            <div class="welcome-icon">🔮</div>
+            <p>Your future self is here.</p>
+            <span>Ask anything — about your journey, decisions, or what to focus on.</span>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typing-indicator" aria-label="FutureMe is typing">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+
+        <!-- Chat input -->
+        <div class="chat-input-row">
+          <input
+            type="text"
+            class="chat-input"
+            id="chat-input"
+            placeholder="Ask your FutureMe anything…"
+            aria-label="Chat message input"
+            autocomplete="off"
+          />
+          <button
+            type="button"
+            class="chat-send-btn"
+            id="chat-send-btn"
+            aria-label="Send message"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ─────────────────────────────────────────────── -->
+    <footer>
+      <p>FutureMe · Powered by <span>Gemini AI</span> · Built for dreamers.</p>
+    </footer>
+
+  </div><!-- /container -->
+
+  <!-- Screen-reader only utility -->
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+  <script src="script.js"></script>
+</body>
+</html>
